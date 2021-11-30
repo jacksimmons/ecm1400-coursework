@@ -1,0 +1,110 @@
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing (date) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (areaName) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (newCasesByPublishDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumCasesByPublishDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing (date) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (areaName) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (newCasesByPublishDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumCasesByPublishDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: date.
+DEBUG:root:API Data Missing: areaName.
+DEBUG:root:API Data Missing: newCasesByPublishDate.
+DEBUG:root:API Data Missing: cumCasesByPublishDate.
+DEBUG:root:API Data Missing (newDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: date.
+DEBUG:root:API Data Missing: areaName.
+DEBUG:root:API Data Missing: newCasesByPublishDate.
+DEBUG:root:API Data Missing: cumCasesByPublishDate.
+DEBUG:root:API Data Missing (newDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: date.
+DEBUG:root:API Data Missing: areaName.
+DEBUG:root:API Data Missing: newCasesByPublishDate.
+DEBUG:root:API Data Missing: cumCasesByPublishDate.
+DEBUG:root:API Data Missing (newDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: date.
+DEBUG:root:API Data Missing: areaName.
+DEBUG:root:API Data Missing: newCasesByPublishDate.
+DEBUG:root:API Data Missing: cumCasesByPublishDate.
+DEBUG:root:API Data Missing (newDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: date.
+DEBUG:root:API Data Missing: areaName.
+DEBUG:root:API Data Missing: newCasesByPublishDate.
+DEBUG:root:API Data Missing: cumCasesByPublishDate.
+DEBUG:root:API Data Missing (newDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:
+
+-----MODULE STARTUP-----
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=1 HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): api.coronavirus.data.gov.uk:443
+DEBUG:urllib3.connectionpool:https://api.coronavirus.data.gov.uk:443 "GET /v1/data?filters=areaType%3Dltla%3BareaName%3DExeter&structure=%7B%22date%22%3A%22date%22%2C%22areaName%22%3A%22areaName%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByDeathDate%22%3A%22newDeaths28DaysByDeathDate%22%2C%22cumDeaths28DaysByDeathDate%22%3A%22cumDeaths28DaysByDeathDate%22%7D&format=json&page=2 HTTP/1.1" 204 0
+DEBUG:root:API Data Missing: newDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing: cumDeaths28DaysByDeathDate.
+DEBUG:root:API Data Missing (newDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
+DEBUG:root:API Data Missing (cumDeaths28DaysByDeathDate) has been replaced by data from 2021-11-28. Original date: 2021-11-29.
