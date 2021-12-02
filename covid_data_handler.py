@@ -4,6 +4,7 @@ import sched, threading, time, datetime #Time scheduling modules
 import logging
 from uk_covid19 import Cov19API
 from flask import Flask, render_template, request, redirect
+from wtforms import StringField
 import enum
 
 class UpdateAction(enum.Enum):
@@ -15,6 +16,7 @@ class UpdateAction(enum.Enum):
 updates = []
 covid_scheduling_event = {}
 current_data = {"updates": updates}
+name_error_counter = 0
 
 #0-9: NotSet, 10-19: Debug, 20-29: Info, 30-39: Warn, 40-49: Error, 50+: Critical
 logging.basicConfig(level=logging.DEBUG, filename="data/covid_data_handler.log")
@@ -71,6 +73,13 @@ def add_update(name:str, nice_interval:str, actions:list) -> None:
     update = {"title":name, "interval": interval, "content":content, "calls":calls, "repetitive":repetitive}
     updates.append(update)
     #No need to refresh current_data["updates"] as updates is mutable.
+
+def remove_update(name:str) -> None:
+    """Removes an update by name."""
+    for update in updates:
+        if update["title"] == name:
+            updates.remove(update)
+            break
 
 def parse_csv_data(csv_filename: str) -> list[str]:
     """Parses CSV file data into a list of lists (rows), each nested list representing a row in the file."""
@@ -255,6 +264,15 @@ app = create_app()
 @app.route("/")
 def render_webpage():
     """Renders the root webpage."""
+    global name_error_counter
+    item_to_remove = request.args.get("update_item")
+    if item_to_remove is not None:
+        remove_update(item_to_remove)
+    if name_error_counter >= 1:
+        current_data.pop("name_err")#Error has already been displayed and the webpage has been updated since, so remove error.
+        name_error_counter = 0
+    if "name_err" in current_data:
+        name_error_counter += 1
     return render_template(template_name_or_list="index.html", **current_data)
 
 @app.route("/submit", methods=["POST"])
@@ -263,28 +281,30 @@ def submit_form():
     if request.method == "POST":
         update_covid_data = request.form.get("covid-data")
         update_news_articles = request.form.get("news")
+        name = request.form["two"]
 
-        if not (update_covid_data is None and update_news_articles is None): #If the update actually updates something...
-            print(request.form.to_dict())
-            duration = request.form["update"]
-            print(duration)
-            name = request.form["two"]
-            repeat_update = request.form.get("repeat")
+        if not (update_covid_data is None and update_news_articles is None): #If the update actually updates something
+            if name not in (update["title"] for update in updates): #If the name provided is unique
+                duration = request.form["update"]
+                repeat_update = request.form.get("repeat")
 
-            print(repeat_update) #None is standard for unchecked checkbox.
-            print(update_covid_data)
-            print(update_news_articles)
+                print(repeat_update) #None is standard for unchecked checkbox.
+                print(update_covid_data)
+                print(update_news_articles)
 
-            content = []
-            if update_covid_data is not None:
-                content.append(UpdateAction.COVID_UPDATE_REQUEST)
-            if update_news_articles is not None:
-                content.append(UpdateAction.NEWS_UPDATE_REQUEST)
-            if repeat_update is not None:
-                content.append(UpdateAction.REPETITIVE_REQUEST)
-            content.append(UpdateAction.TIMED_REQUEST)
+                content = []
+                if update_covid_data is not None:
+                    content.append(UpdateAction.COVID_UPDATE_REQUEST)
+                if update_news_articles is not None:
+                    content.append(UpdateAction.NEWS_UPDATE_REQUEST)
+                if repeat_update is not None:
+                    content.append(UpdateAction.REPETITIVE_REQUEST)
+                content.append(UpdateAction.TIMED_REQUEST)
 
-            add_update(name, duration, content) #also needs news update compatibility
+                add_update(name, duration, content) #also needs news update compatibility
+            else:
+                current_data["name_err"] = "Name already taken."
+                name_error_counter = 0
 
     return redirect("/")
 
