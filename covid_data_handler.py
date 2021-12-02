@@ -4,45 +4,21 @@ import sched, threading, time, datetime #Time scheduling modules
 import logging
 from uk_covid19 import Cov19API
 from flask import Flask, render_template, request, redirect
+import enum
+
+class UpdateAction(enum.Enum):
+    COVID_UPDATE_REQUEST    = 0
+    NEWS_UPDATE_REQUEST     = 1
+    REPETITIVE_REQUEST      = 2
+    TIMED_REQUEST           = 3
 
 updates = []
 covid_scheduling_event = {}
-current_data = {}
+current_data = {"updates": updates}
 
 #0-9: NotSet, 10-19: Debug, 20-29: Info, 30-39: Warn, 40-49: Error, 50+: Critical
 logging.basicConfig(level=logging.DEBUG, filename="data/covid_data_handler.log")
 logging.debug("\n\n-----MODULE STARTUP-----")
-
-###FLASK
-def create_app():
-    # Create and return Flask application
-    app = Flask(__name__)
-    app.debug = True
-    return app
-app = create_app()
-
-@app.route("/")
-def render_webpage():
-    #print(current_data)
-    return render_template(template_name_or_list="index.html", **current_data)
-
-@app.route("/submit", methods=["POST"])
-def submit_form():
-    print(request.method)
-    if request.method == "POST":
-        print(request.form.to_dict())
-        duration = request.form["update"]
-        name = request.form["two"]
-        repeat_update = request.form.get("repeat")
-        update_covid_data = request.form.get("covid-data")
-        update_news_articles = request.form.get("news-articles")
-
-        print(repeat_update) #None is standard for unchecked checkbox.
-        print(update_covid_data)
-        print(update_news_articles)
-
-        print(name)
-    return redirect("/")
 
 ###Other functions
 def get_date(offset:int=0) -> str:
@@ -51,18 +27,50 @@ def get_date(offset:int=0) -> str:
     return date.strftime("%Y-%m-%d")
 
 def do_updates() -> None:
+    """Adds all of the updates in the global updates list to a scheduler, then runs that scheduler
+    every time the scheduler's queue is empty. A never-ending procedure, so must be run in a separate
+    thread to prevent the program from halting."""
     s = sched.scheduler(time.time, time.sleep)
     while True:
         if s.queue == []: #If the queue is empty, repopulate the queue.
             for update in updates:
                 #print(update["name"])
-                s.enter(update["interval"], 1, update["action"], ([update["name"]])) #Passes the update name so the called function knows which update called it. Note: Square brackets necessary.
-                #This means every called function must have a name parameter.
+                for call in update["calls"]:
+                    s.enter(update["interval"], 1, call)
+                if not update["repetitive"]:
+                    updates.remove(update) #If two identical updates exist, it doesn't matter which is removed.
             s.run()
 
-def add_update(name:str, interval:float, action) -> None:
-    update = {"name":name, "interval":interval, "action":action}
+def add_update(name:str, nice_interval:str, actions:list) -> None:
+    """Reformats and adds an update to the global updates list.
+    nice_interval: An interval formatted as a MM:SS string."""
+    content = ""
+    calls = []
+    repetitive = False
+    interval = float(nice_interval[:2]) * 60 + float(nice_interval[3:]) #Convert "MM:SS" to seconds
+    for action in actions: #Convert enum values to corresponding readable string values
+        if action == UpdateAction.COVID_UPDATE_REQUEST:
+            if content != "":
+                content += ", "
+            content += "Update Covid Data"
+            calls.append(covid_update_request)
+        elif action == UpdateAction.NEWS_UPDATE_REQUEST:
+            if content != "":
+                content += ", "
+            content += "Update News Articles"
+        elif action == UpdateAction.REPETITIVE_REQUEST: #Sets the request to be repetitive
+            if content != "":
+                content += ", "
+            content += "Repeating"
+            repetitive = True
+        elif action == UpdateAction.TIMED_REQUEST: #Sets the request to be timed. All requests are timed requests
+            if content != "":
+                content += ", "
+            content += f"Interval [MM:SS]: {nice_interval}"
+
+    update = {"title":name, "interval": interval, "content":content, "calls":calls, "repetitive":repetitive}
     updates.append(update)
+    #No need to refresh current_data["updates"] as updates is mutable.
 
 def parse_csv_data(csv_filename: str) -> list[str]:
     """Parses CSV file data into a list of lists (rows), each nested list representing a row in the file."""
@@ -216,27 +224,72 @@ def covid_API_request(location:str="Exeter",
     #print("\nMOST RECENT: \n" +str(most_recent_data))
     return most_recent_data
 
-def covid_update_request(name:str) -> None:
+def covid_update_request() -> None:
     """Uses covid_API_request to update the main webpage for scheduled updates."""
     #print("---Update req---")
     #print("LOCAL")
+    print("Update")
     local = covid_API_request(location="Exeter", location_type="ltla", days_recorded=14)
     #print("NATIONAL")
     national = covid_API_request(location="UK", location_type="nation", days_recorded=14)
 
     global current_data
-    current_data = {"updates": "",
+    current_data.update({
                     "location": "Exeter",
                     "nation_location": "UK",
                     "local_7day_infections": local["newCases7DaysByPublishDate"],
                     "national_7day_infections": national["newCases7DaysByPublishDate"],
                     "hospital_cases": local["hospitalCases"],
-                    "deaths_total": local["cumDeaths28DaysByDeathDate"]}
+                    "deaths_total": local["cumDeaths28DaysByDeathDate"]})
     
 #print(process_covid_csv_data(parse_csv_data(input("CSV FILENAME: "))))
 
+###FLASK
+def create_app():
+    """Creates and returns the Flask application."""
+    app = Flask(__name__)
+    app.debug = True
+    return app
+app = create_app()
+
+@app.route("/")
+def render_webpage():
+    """Renders the root webpage."""
+    return render_template(template_name_or_list="index.html", **current_data)
+
+@app.route("/submit", methods=["POST"])
+def submit_form():
+    print(request.method)
+    if request.method == "POST":
+        update_covid_data = request.form.get("covid-data")
+        update_news_articles = request.form.get("news")
+
+        if not (update_covid_data is None and update_news_articles is None): #If the update actually updates something...
+            print(request.form.to_dict())
+            duration = request.form["update"]
+            print(duration)
+            name = request.form["two"]
+            repeat_update = request.form.get("repeat")
+
+            print(repeat_update) #None is standard for unchecked checkbox.
+            print(update_covid_data)
+            print(update_news_articles)
+
+            content = []
+            if update_covid_data is not None:
+                content.append(UpdateAction.COVID_UPDATE_REQUEST)
+            if update_news_articles is not None:
+                content.append(UpdateAction.NEWS_UPDATE_REQUEST)
+            if repeat_update is not None:
+                content.append(UpdateAction.REPETITIVE_REQUEST)
+            content.append(UpdateAction.TIMED_REQUEST)
+
+            add_update(name, duration, content) #also needs news update compatibility
+
+    return redirect("/")
+
 ###Startup commands and global variable creation
-add_update("Bruh", 3, covid_update_request)
+add_update("Bruh", "00:03", [UpdateAction.COVID_UPDATE_REQUEST])
 update_runner = threading.Thread(None, do_updates) #Runs an infinite loop of executing updates asynchronously so the rest of the program runs in parallel.
 update_runner.start()
 ###End of Startup
