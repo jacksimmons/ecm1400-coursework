@@ -1,17 +1,68 @@
 import csv
 import json
-import sched, time #Time scheduling modules
+import sched, threading, time, datetime #Time scheduling modules
 import logging
 from uk_covid19 import Cov19API
-import os
+from flask import Flask, render_template, request, redirect
+
+updates = []
+covid_scheduling_event = {}
+current_data = {}
 
 #0-9: NotSet, 10-19: Debug, 20-29: Info, 30-39: Warn, 40-49: Error, 50+: Critical
 logging.basicConfig(level=logging.DEBUG, filename="data/covid_data_handler.log")
 logging.debug("\n\n-----MODULE STARTUP-----")
 
-s = sched.scheduler(time.time, time.sleep)
-covid_scheduling_event = {}
-current_API_call = {}
+###FLASK
+def create_app():
+    # Create and return Flask application
+    app = Flask(__name__)
+    app.debug = True
+    return app
+app = create_app()
+
+@app.route("/")
+def render_webpage():
+    #print(current_data)
+    return render_template(template_name_or_list="index.html", **current_data)
+
+@app.route("/submit", methods=["POST"])
+def submit_form():
+    print(request.method)
+    if request.method == "POST":
+        print(request.form.to_dict())
+        duration = request.form["update"]
+        name = request.form["two"]
+        repeat_update = request.form.get("repeat")
+        update_covid_data = request.form.get("covid-data")
+        update_news_articles = request.form.get("news-articles")
+
+        print(repeat_update) #None is standard for unchecked checkbox.
+        print(update_covid_data)
+        print(update_news_articles)
+
+        print(name)
+    return redirect("/")
+
+###Other functions
+def get_date(offset:int=0) -> str:
+    """Returns the date + the offset in YYYY-MM-DD format."""
+    date = datetime.datetime.today() + datetime.timedelta(days=offset)
+    return date.strftime("%Y-%m-%d")
+
+def do_updates() -> None:
+    s = sched.scheduler(time.time, time.sleep)
+    while True:
+        if s.queue == []: #If the queue is empty, repopulate the queue.
+            for update in updates:
+                #print(update["name"])
+                s.enter(update["interval"], 1, update["action"], ([update["name"]])) #Passes the update name so the called function knows which update called it. Note: Square brackets necessary.
+                #This means every called function must have a name parameter.
+            s.run()
+
+def add_update(name:str, interval:float, action) -> None:
+    update = {"name":name, "interval":interval, "action":action}
+    updates.append(update)
 
 def parse_csv_data(csv_filename: str) -> list[str]:
     """Parses CSV file data into a list of lists (rows), each nested list representing a row in the file."""
@@ -67,32 +118,55 @@ def process_covid_csv_data(covid_csv_data: list) -> list[int]:
     
     return [last_7_days_cases, current_hospital_cases, cumulative_deaths]
 
-def covid_API_request(location="Exeter", location_type="ltla") -> dict:
+def covid_API_request(location:str="Exeter",
+                      location_type:str="ltla",
+                      days_recorded:int=14) -> dict:
     """Carries out a COVID API data request and returns the result."""
-    loc_filters = [
+    date = get_date(offset=-14)
+
+    #print(date)
+
+    filters = [
         f"areaType={location_type}",
         f"areaName={location}"]
+    if location_type == "nation":
+        filters.pop(1)
+
     structure = {
         "date": "date",
-        "areaName": "areaName",
-        "newCasesByPublishDate": "newCasesByPublishDate",
         "cumCasesByPublishDate": "cumCasesByPublishDate",
-        "newDeaths28DaysByDeathDate": "newDeaths28DaysByDeathDate",
         "cumDeaths28DaysByDeathDate": "cumDeaths28DaysByDeathDate"
     }
+    if location_type == "nation":
+        structure.pop("cumDeaths28DaysByDeathDate")
 
-    api = Cov19API(filters=loc_filters, structure=structure)
-    updates = api.get_json()["data"]
+    api = Cov19API(
+        filters=filters,
+        structure=structure)
+
+    updates = api.get_json()
+
     most_recent_data = {}
     missing_keys = list(structure.keys())
-    for update in updates: #Iterate through every update until the most recent version of every stat has been obtained.
+
+    cumCasesAvailable = True
+    for missing_key in missing_keys: #Check there are non-None entries for each data item so that the program doesn't iterate through the entire API data dictionary expensively.
+        if not all(update[missing_key] is not None for update in updates["data"]): #If there is a key for which there is no non-None value in the API data
+            most_recent_data[missing_key] = "N/A"
+            missing_keys.remove(missing_key)
+            if missing_key == "cumCasesByPublishDate":
+                cumCasesAvailable = False #Means the while cumCasesAvailable loop never enters; it is not possible to calculate the new cases in the past week without cumulative cases.
+
+    for update in updates["data"]: #Iterate through every update until the most recent version of every stat has been obtained.
         if missing_keys != []: #Check that data is missing.
+            #print("Missing Keys: " + str(missing_keys))
+            #print("Update: " + str(update))
+
             for item in update:
-                print(item)
-                print(missing_keys)
-                print(item in missing_keys)
+                #print("Item: " + item)
                 if update[item] is not None and item in missing_keys: #Use the most recent item for each stat which is not "None".
                     most_recent_data[item] = update[item]
+                    #print(most_recent_data)
                     missing_keys.remove(item)
                     if "date" in most_recent_data and update["date"] != most_recent_data["date"]:
                         logging.debug("API Data Missing (%s) has been replaced by data from %s. Original date: %s.",
@@ -101,20 +175,72 @@ def covid_API_request(location="Exeter", location_type="ltla") -> dict:
                                         most_recent_data["date"])
                 elif item in missing_keys:
                     logging.debug("API Data Missing: %s.", item)
-        else: #All data has been obtained; exit the loop.
-            break
+            continue #Don't want to exit the loop yet.
 
-    print("UPDATES: \n" +str(updates))
-    print("\n\n\n\n\nMOST RECENT: \n" +str(most_recent_data))
+        cnt = 0
+        while cumCasesAvailable: #Last thing to do is to subtract the cumCasesByPublishDate of the date 7 days ago from the current cumCasesByPublishDate.
+            #If that fails, we resort to the closest date after 7 days ago. (Iterate over every day until valid data has been found)
+            #print(cnt)
+            try:
+                cumCases7PlusCntDaysAgo = updates["data"][updates["data"].index(update) + 7 + cnt]["cumCasesByPublishDate"]
+                if cumCases7PlusCntDaysAgo is not None:
+                    most_recent_data["newCases7DaysByPublishDate"] = most_recent_data["cumCasesByPublishDate"] - cumCases7PlusCntDaysAgo
+                    break
+                else:
+                    cnt += 1
+            except IndexError: #The API should always have data from 7 days ago or older, so this is an extreme catch.
+                #Impossible to calculate; every cumCasesByPublishDate data item with age >= 7 days is NoneType.
+                logging.warning("Important data is missing from the API: Cumulative cases from 7 days and older. This makes it impossible to truthfully calculate the new cases over the past week.")
+                most_recent_data["newCases7DaysByPublishDate"] = "N/A"
+                break
+        else:
+            if not cumCasesAvailable: #elif not supported by while. This statement is to ensure that only cumCasesAvailable being False before the loop began can cause this code to be executed.
+                most_recent_data["newCases7DaysByPublishDate"] = "N/A"
+        break #No need to stay in the loop.
 
-def schedule_covid_updates(update_interval:float, update_name:str):
-    """Schedules COVID data updates at a regular interval, under an alias."""
-    if covid_scheduling_event != {}:
-        covid_scheduling_event["title"] = update_name
-        covid_scheduling_event["event"] = s.enter(delay=update_interval,
-                                                 priority=1,
-                                                 action=covid_API_request)
-        s.cancel()
+    if location_type == "ltla":
+        hospital_api = Cov19API(filters=filters, structure={"hospitalCases": "hospitalCases"}).get_json()
+
+        for update in hospital_api["data"]:
+            if update["hospitalCases"] is not None:
+                most_recent_data["hospitalCases"] = update["hospitalCases"]
+                break
+            else:
+                logging.debug("API Data Missing: hospitalCases.")
+                continue
+        else:
+            if "hospitalCases" not in most_recent_data:
+                most_recent_data["hospitalCases"] = "N/A"
+                logging.warning("Important data is missing from the API: Any data on the number of hospital cases.")
+
+    #print("\nMOST RECENT: \n" +str(most_recent_data))
+    return most_recent_data
+
+def covid_update_request(name:str) -> None:
+    """Uses covid_API_request to update the main webpage for scheduled updates."""
+    #print("---Update req---")
+    #print("LOCAL")
+    local = covid_API_request(location="Exeter", location_type="ltla", days_recorded=14)
+    #print("NATIONAL")
+    national = covid_API_request(location="UK", location_type="nation", days_recorded=14)
+
+    global current_data
+    current_data = {"updates": "",
+                    "location": "Exeter",
+                    "nation_location": "UK",
+                    "local_7day_infections": local["newCases7DaysByPublishDate"],
+                    "national_7day_infections": national["newCases7DaysByPublishDate"],
+                    "hospital_cases": local["hospitalCases"],
+                    "deaths_total": local["cumDeaths28DaysByDeathDate"]}
     
-covid_API_request()
 #print(process_covid_csv_data(parse_csv_data(input("CSV FILENAME: "))))
+
+###Startup commands and global variable creation
+add_update("Bruh", 3, covid_update_request)
+update_runner = threading.Thread(None, do_updates) #Runs an infinite loop of executing updates asynchronously so the rest of the program runs in parallel.
+update_runner.start()
+###End of Startup
+
+###Finalisation
+if __name__ == "__main__":
+    app.run()

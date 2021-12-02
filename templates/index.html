@@ -14,10 +14,10 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="./index_files/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <script src="./index_files/jquery-3.3.1.slim.min.js.download" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="./index_files/popper.min.js.download" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="./index_files/bootstrap.min.js.download" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/static/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="/static/jquery-3.3.1.slim.min.js.download" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="/static/popper.min.js.download" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="/static/bootstrap.min.js.download" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
 
   
@@ -34,7 +34,7 @@
       <div class="toast fade show" data-autohide="false">
         <div class="toast-header">
           <strong class="mr-auto">{{ update['title'] }}</strong>
-          <form action="https://vle.exeter.ac.uk/index" method="get">
+          <form action="/" method="get">
           <button type="submit" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close" name="update_item" value="{{ update['title'] }}">
             <span aria-hidden="true">×</span>
           </button>
@@ -49,7 +49,7 @@
 
     <div class="col-sm">
 
-    <form action="https://vle.exeter.ac.uk/index" method="get" class="form-alarms">
+    <form action="/submit" method="post" class="form-alarms">
       <img class="mb-4" src="./index_files/{{ image }}" alt="" width="72" height="72">
       <h1 class="h1 mb-3 font-weight-normal">{{title}}</h1>
 
@@ -57,9 +57,9 @@
 
       <h2 class="h2 mb-3 font-weight-normal">National 7-day infection rate in {{nation_location}}: {{national_7day_infections}}</h2>
 
-      <h2 class="h2 mb-3 font-weight-normal">{{hospital_cases}}</h2>
+      <h2 class="h2 mb-3 font-weight-normal">Local hospital cases in {{location}}: {{hospital_cases}}</h2>
 
-      <h2 class="h2 mb-3 font-weight-normal">{{deaths_total}}</h2>
+      <h2 class="h2 mb-3 font-weight-normal">Local total deaths in {{location}}: {{deaths_total}}</h2>
 
       <br>
       <h3 class="h3 mb-3 font-weight-normal">Schedule data updates</h3>

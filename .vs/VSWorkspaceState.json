@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\data",
+    "\\static",
     "\\templates"
   ],
-  "SelectedNode": "\\data\\covid_data_handler.log",
+  "SelectedNode": "\\templates\\index.html",
   "PreviewInSolutionExplorer": false
 }
