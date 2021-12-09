@@ -2,6 +2,18 @@ from covid_data_handler import covid_update_request
 from covid_news_handling import news_API_request
 
 
+import datetime, time
+from enum import IntEnum
+import logging
+import threading, sched
+import json
+from flask import Flask, render_template, request, redirect
+
+###Logging
+#0-9: NotSet, 10-19: Debug, 20-29: Info, 30-39: Warn, 40-49: Error, 50+: Critical
+logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG, filename="data/log.log")
+logging.debug("\n\n-----MODULE STARTUP-----")
+
 ###Classes
 class UpdateAction(IntEnum):
     """An enum class to allow the representation of different actions by discrete integers."""
