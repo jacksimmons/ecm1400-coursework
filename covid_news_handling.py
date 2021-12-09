@@ -4,9 +4,36 @@ from core \
 import datetime
 import requests
 import json
+import logging
+import requests
+
+def update_news_request() -> None:
+    """Uses news_API_request to update the news and update config.json and the relevant data structures to reflect this."""
+    current_data["news_articles"], current_data["api_exhausted"] = news_API_request()
+    with open("data/config.json", "r") as f:
+        json_file = json.load(f)
+    json_file["news_articles"] = current_data["news_articles"]
+    with open("data/config.json", "w") as f:
+       json.dump(json_file, f, indent=4)
+
+def update_news(update_name:str, update_interval:float=300) -> None:#
+    """Base function for creating repetitive news updates via core.add_update().
+    Can be updated less frequently than COVID statistics, as only 100 daily requests are permitted."""
+    try:
+        update_interval = float(update_interval)
+        cont = update_interval >= 0
+    except ValueError:
+        cont = False
+    if cont:
+        core.add_update_with_checks(update_name, update_interval, core.UpdateAction.NEWS_UPDATE_REQUEST)
+    else:
+        logging.error("[update_news] update_interval must be a float >= 0.")
 
 def news_API_request(covid_terms="Covid COVID-19 coronavirus") -> dict:
     """Retrieves COVID news from the News API. Note: API usage is limited to 100 requests per day."""
+    #Unfortunately with the method I have used, this function needs to be in here since the startup code below uses it, and that in turn must be in a different file
+    #to covid_news_handling to prevent a circular import.
+
     #Open the config file to get the API key.
     with open("data/config.json", "r") as f:
         json_file = json.load(f)
@@ -14,7 +41,7 @@ def news_API_request(covid_terms="Covid COVID-19 coronavirus") -> dict:
 
     #Get and extract request data from newsapi.org
     api_exhausted = False
-    request = requests.get(fr"https://newsapi.org/v2/everything?q={covid_terms}&sortBy=popularity&from={get_date(-7)}&apiKey={api_key}").json()
+    request = requests.get(fr"https://newsapi.org/v2/everything?q={covid_terms}&sortBy=popularity&from={core.get_date(-7)}&apiKey={api_key}").json()
     if request["status"] == "error":
         if request["code"] == "rateLimited":
             data = None
@@ -41,12 +68,3 @@ def news_API_request(covid_terms="Covid COVID-19 coronavirus") -> dict:
 
     #Return the correctly modified data and whether the API has been exhausted for the day.
     return data, api_exhausted
-
-def update_news(update_name:str, update_interval:float=300, update_instantly:bool=True) -> None:
-    """Base function for creating repetitive news updates via core.add_update().
-    Can be updated less frequently than COVID statistics, as only 100 daily requests are permitted."""
-    if update_instantly:
-        current_data["news_articles"], current_data["api_exhausted"] = news_API_request()
-    add_update(update_name, update_interval, [UpdateAction.NEWS_UPDATE_REQUEST, UpdateAction.REPETITIVE_REQUEST, UpdateAction.TIMED_REQUEST])
-
-#print(news_API_request().json())

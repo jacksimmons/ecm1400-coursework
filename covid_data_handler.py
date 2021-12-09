@@ -4,19 +4,10 @@ from core \
 import csv
 import sched, threading, time #Time scheduling modules
 import logging
+import json
 from uk_covid19 import Cov19API
-from flask import Flask, render_template, request, redirect
-from wtforms import StringField
-import enum
-#Everything in the below module is used by this file.
-from covid_news_handling import *
 
-###Logging
-#0-9: NotSet, 10-19: Debug, 20-29: Info, 30-39: Warn, 40-49: Error, 50+: Critical
-logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG, filename="data/covid_data_handler.log")
-logging.debug("\n\n-----MODULE STARTUP-----")
-
-def parse_csv_data(csv_filename: str) -> list[str]:
+def parse_csv_data(csv_filename: str) -> list[str]:#
     """Parses CSV file data into a list of lists (rows), each nested list representing a row in the file."""
     csv_data = []
     csv_current_row = []
@@ -24,57 +15,56 @@ def parse_csv_data(csv_filename: str) -> list[str]:
     with open(csv_filename, "r") as csv_file:
         csv_reader = csv.reader(csv_file)
         for row in csv_reader:
-            if in_top_row: ##Note: This is not good for general CSV files.
-                # Skips the top row (column titles).
-                in_top_row = False
-                continue
-
             csv_current_row = [element for element in row]
             csv_data.append(csv_current_row)
 
         return csv_data
 
-def process_covid_csv_data(covid_csv_data: list) -> list[int]:
+def process_covid_csv_data(covid_csv_data: list) -> list[int]:#
     """Processes parsed COVID-19 CSV data and returns important statistics."""
     #areaCode,areaName,areaType,date,cumDailyNsoDeathsByDeathDate,hospitalCases,newCasesBySpecimenDate
     
-    # NUMBER OF CASES IN THE LAST 7 DAYS
-    last_7_days_cases = sum([(int(row[6]) if row[6] else 0) for row in covid_csv_data[:7]])
-    # Above line sets a day's new cases to 0 if no data is provided.
-    
     cnt = 7
     last_7_days_cases = 0
-    data_extracted = False
-    for row in covid_csv_data:
+    skip_upto_incl = 2
+    for row in covid_csv_data: #Skip the most recent day and the day with incomplete case data.
+        if covid_csv_data.index(row) <= skip_upto_incl:
+            #Skip this iteration
+            continue
+        
         if cnt > 0 and row[6]: ##Note: This won't give valid weekly readings if data is regularly missing.
             # Sum for number of cases for the last 7 valid days.
-            last_7_days_cases += row[6]
+            last_7_days_cases += int(row[6])
             cnt -= 1
-            
-        if not(row[4] and row[5]): ##Note: de Morgan
-            # If either are missing, continue.
-            continue
-
-        # Otherwise, extract data if this hasn't been done already.
-        elif not data_extracted:
-            # Need to use else if
-            cumulative_deaths = row[4]
-            current_hospital_cases = row[5]
-            data_extracted = True
-
         if cnt > 0:
             # Stops the loop from breaking if the sum has not completed and the other data has been extracted.
             continue
-        
-        break # Exit the loop - data extracted and case sum complete.
+            
+    deaths_recorded = False
+    hospital_recorded = False
+    skip_upto_incl = 0
+    for row in covid_csv_data:
+        if covid_csv_data.index(row) <= skip_upto_incl:
+            #Skip this iteration
+            continue
+
+        if row[4] and not deaths_recorded:
+            cumulative_deaths = int(row[4])
+            deaths_recorded = True
+        if row[5] and not hospital_recorded:
+            current_hospital_cases = int(row[5])
+            hospital_recorded = True
+
+        if deaths_recorded and hospital_recorded:
+            break #Data extracted
     
     return [last_7_days_cases, current_hospital_cases, cumulative_deaths]
 
 def covid_API_request(location:str="Exeter",
                       location_type:str="ltla",
-                      days_recorded:int=14) -> dict:
+                      days_recorded:int=14) -> dict:#
     """Carries out a COVID API data request and returns the result."""
-    date = get_date(offset=-14)
+    date = core.get_date(offset=-14)
 
     #print(date)
 
@@ -144,6 +134,19 @@ def covid_API_request(location:str="Exeter",
 
     return most_recent_data
 
+def schedule_covid_updates(update_name:str, update_interval:float) -> None:#
+    """Base function for creating repetitive updates via core.add_update()."""
+    #Adds an update with three features: it is a covid update, repeating, and timed (an update must be timed).
+    try:
+        update_interval = float(update_interval)
+        cont = update_interval >= 0
+    except ValueError:
+        cont = False
+    if cont:
+        core.add_update_with_checks(update_name, update_interval, core.UpdateAction.COVID_UPDATE_REQUEST)
+    else:
+        logging.error("[schedule_covid_updates] update_interval must be a float >= 0.")
+
 def covid_update_request(local="Exeter", national="UK") -> None:
     """Uses covid_API_request to update the main webpage for scheduled updates."""
     local = covid_API_request(location=local, location_type="ltla", days_recorded=14)
@@ -156,9 +159,3 @@ def covid_update_request(local="Exeter", national="UK") -> None:
                     "national_7day_infections": national["newCases7DaysByPublishDate"],
                     "hospital_cases": national["hospitalCases"],
                     "deaths_total": national["cumDeaths28DaysByDeathDate"]})
-
-def schedule_covid_updates(update_name:str, update_interval:int) -> None:
-    """Base function for creating repetitive updates via core.add_update()."""
-    #Adds an update with three features: it is a covid update, repeating, and timed (an update must be timed).
-    covid_update_request()
-    add_update(update_name, update_interval, [UpdateAction.COVID_UPDATE_REQUEST, UpdateAction.REPETITIVE_REQUEST, UpdateAction.TIMED_REQUEST])

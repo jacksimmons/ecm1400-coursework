@@ -1,10 +1,9 @@
 from covid_data_handler import covid_update_request
 from covid_news_handling import news_API_request
 
-import datetime
 
 ###Classes
-class UpdateAction(enum.Enum):
+class UpdateAction(IntEnum):
     """An enum class to allow the representation of different actions by discrete integers."""
     COVID_UPDATE_REQUEST    = 0
     NEWS_UPDATE_REQUEST     = 1
@@ -31,6 +30,7 @@ def do_updates() -> None:
     every time the scheduler's queue is empty. A never-ending procedure, so must be run in a separate
     thread to prevent the program from halting."""
     s = sched.scheduler(time.time, time.sleep)
+    
     while True:
         if s.queue == []: #If the queue is empty, repopulate the queue.
             for update in updates:
@@ -71,15 +71,37 @@ def add_update(name:str, interval:float, actions:list=
             content += f"Interval (in seconds): {interval}"
 
     update = {"title":name, "interval": interval, "content":content, "calls":calls, "repetitive":repetitive}
-    updates.append(update)
-    #No need to refresh current_data["updates"] as updates is mutable.
+
+    with open("data/config.json", "r") as f:
+        json_file = json.load(f)
+
+    if update["title"] not in [u["title"] for u in json_file["updates"]]: #Extreme case error checking (for duplicate update names)
+        json_file["updates"].append(update)
+
+        with open("data/config.json", "w") as f:
+            json.dump(json_file, f, indent=4)
+
+def add_update_with_checks(update_name:str, update_interval:float, update_type:int):
+    print("HI1")
+    if isinstance(update_name, str) and update_name != "": #If update_name is a non-empty string, then continue.
+        with open("data/config.json", "r") as f:
+            if update_name not in [update["title"] for update in json.load(f)["updates"]]:
+                add_update(update_name, update_interval, [update_type, UpdateAction.REPETITIVE_REQUEST, UpdateAction.TIMED_REQUEST])
+            else:
+                logging.warn(f"[{request_calls[update_type]} -> add_update_with_checks] There was an attempt to make an update with the same name as an existing update.")
+    else:
+        logging.warn(f"[{request_calls[update_type]} -> add_update_with_checks] update_name must be a non-empty string.") 
 
 def remove_update(name:str) -> None:
     """Removes an update by name lookup."""
-    for update in updates:
+    with open("data/config.json", "r") as f:
+        json_file = json.load(f)
+    for update in json_file["updates"]:
         if update["title"] == name:
-            updates.remove(update)
+            json_file["updates"].remove(update)
             break
+    with open("data/config.json", "w") as f:
+        json.dump(json_file)
 
 def blacklist_article(name:str) -> None:
     """Removes and blacklists an article by name lookup."""
@@ -157,12 +179,10 @@ def submit_form():
 
     return redirect("/")
 
-###Startup commands and global variable creation
-add_update("update", 1, [UpdateAction.COVID_UPDATE_REQUEST])
+#add_update("update", 1, [UpdateAction.COVID_UPDATE_REQUEST]) #Only run once
 update_runner = threading.Thread(None, do_updates) #Runs an infinite loop of executing updates asynchronously so the rest of the program runs in parallel.
 update_runner.start()
-###End of Startup
 
-###Finalisation
+###One-off events (don't occur when imported)
 if __name__ == "__main__":
     app.run()
