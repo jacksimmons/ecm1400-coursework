@@ -3,8 +3,9 @@
     "",
     "\\data",
     "\\static",
-    "\\templates"
+    "\\templates",
+    "\\TestResults"
   ],
-  "SelectedNode": "\\covid_news_handling.py",
+  "SelectedNode": "\\data\\config.json",
   "PreviewInSolutionExplorer": false
 }

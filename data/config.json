@@ -1,15 +1,26 @@
 {
     "api_key": "22da870c85c44773ab4b58846582d597",
     "blacklisted_articles": [],
-    "updates": [
+    "covid_updates": [
         {
-            "title": "update",
-            "interval": 1,
-            "content": "Update Covid Data",
-            "calls": [
-                0
-            ],
+            "title": "update test",
+            "interval": 10.0,
+            "content": "Update Covid Data, Repetitive, Interval (in seconds): 10.0",
+            "repetitive": true
+        },
+        {
+            "title": "update test 2",
+            "interval": 0.0,
+            "content": "Update Covid Data, Repetitive, Interval (in seconds): 0.0",
             "repetitive": true
         }
-    ]
+    ],
+    "news_updates": [],
+    "news_articles": [],
+    "location": "Exeter",
+    "nation_location": "UK",
+    "local_7day_infections": 748,
+    "national_7day_infections": 306121,
+    "hospital_cases": 6395,
+    "deaths_total": 127341
 }

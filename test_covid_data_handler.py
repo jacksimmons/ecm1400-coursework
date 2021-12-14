@@ -29,5 +29,9 @@ def test_schedule_covid_updates(): #
     schedule_covid_updates(update_interval=-1, update_name=1)
     schedule_covid_updates(update_interval=1, update_name=1)
     schedule_covid_updates(update_interval="a", update_name="update test 3")
+    schedule_covid_updates(update_interval=1, update_name="update test") # Duplicate name error
 
 test_parse_csv_data()
+test_process_covid_csv_data()
+test_covid_API_request()
+test_schedule_covid_updates()

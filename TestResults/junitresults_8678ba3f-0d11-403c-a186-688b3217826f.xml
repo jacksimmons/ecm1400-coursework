@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="2.852" timestamp="2021-12-11T04:27:19.943557" hostname="LAPTOP-VFDG85S9"><testcase classname="test_news_data_handling" name="test_news_API_request" file="test_news_data_handling.py" line="3" time="2.708"><failure message="AssertionError: assert [{'content': ...ccines'}, ...] == [{'content': ...ccines'}, ...]&#10;  At index 12 diff: {'title': 'Ranieri urges players to get COVID-19 vaccine - Reuters', 'content': 'https://www.reuters.com/lifestyle/sports/ranieri-urges-players-get-covid-19-vaccine-2021-12-09/'} != {'title': 'Swiss group lights 11288 candles for COVID-19 victims - Reuters', 'content': 'https://www.reuters.com/world/europe/swiss-group-lights-11288-candles-covid-19-victims-2021-12-07/'}&#10;  Use -v to get the full diff">def test_news_API_request():
+        assert news_API_request()
+&gt;       assert news_API_request('Covid COVID-19 coronavirus') == news_API_request()
+E       AssertionError: assert [{'content': ...ccines'}, ...] == [{'content': ...ccines'}, ...]
+E         At index 12 diff: {'title': 'Ranieri urges players to get COVID-19 vaccine - Reuters', 'content': 'https://www.reuters.com/lifestyle/sports/ranieri-urges-players-get-covid-19-vaccine-2021-12-09/'} != {'title': 'Swiss group lights 11288 candles for COVID-19 victims - Reuters', 'content': 'https://www.reuters.com/world/europe/swiss-group-lights-11288-candles-covid-19-victims-2021-12-07/'}
+E         Use -v to get the full diff
+
+test_news_data_handling.py:6: AssertionError</failure><system-out>--------------------------------- Captured Log ---------------------------------
+
+--------------------------------- Captured Out ---------------------------------
+
+</system-out><system-err>--------------------------------- Captured Err ---------------------------------
+
+</system-err></testcase><testcase classname="test_news_data_handling" name="test_update_news" file="test_news_data_handling.py" line="7" time="0.001"><system-out>--------------------------------- Captured Log ---------------------------------
+WARNING  root:covid_news_handling.py:48 [add_nupdate_with_checks] There was an attempt to make an update with the same name as an existing update.
+WARNING  root:covid_news_handling.py:48 [add_nupdate_with_checks] There was an attempt to make an update with the same name as an existing update.
+ERROR    root:covid_news_handling.py:143 [update_news] update_interval must be a float &gt;= 0.
+WARNING  root:covid_news_handling.py:50 [add_nupdate_with_checks] update_name must be a non-empty string.
+ERROR    root:covid_news_handling.py:143 [update_news] update_interval must be a float &gt;= 0.
+WARNING  root:covid_news_handling.py:48 [add_nupdate_with_checks] There was an attempt to make an update with the same name as an existing update.
+--------------------------------- Captured Out ---------------------------------
+
+</system-out><system-err>--------------------------------- Captured Err ---------------------------------
+
+</system-err></testcase></testsuite></testsuites>
