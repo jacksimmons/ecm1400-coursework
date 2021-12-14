@@ -12,7 +12,7 @@ from core import (
     open_utf8,
     current_data)
 
-def parse_csv_data(csv_filename: str) -> list[list[str]]:#
+def parse_csv_data(csv_filename:str) -> list[list[str]]:#
     """Parses CSV file data into a list of lists (rows) of data items,
 each nested list representing a row in the file."""
     csv_data = []
@@ -22,47 +22,67 @@ each nested list representing a row in the file."""
         for row in csv_reader:
             csv_current_row = list(row)
             csv_data.append(csv_current_row)
-
     return csv_data
 
-def process_covid_csv_data(covid_csv_data: list) -> list[int]:#
+def process_covid_csv_data(covid_csv_data:list) -> list[int]:#
     """Processes parsed COVID-19 CSV data and returns important statistics."""
-    cnt = 7
-    last_7_days_cases = 0
-    skip_upto_incl = 2
-    for row in covid_csv_data:
-        if covid_csv_data.index(row) <= skip_upto_incl:
-            #Skips the items with missing data. ! Need to make this more dynamic
-            continue
 
-        #Note: This won't give valid weekly readings if data is regularly missing.
-        if cnt > 0 and row[6]:
-            # Sum for number of cases for the last 7 valid days.
-            last_7_days_cases += int(row[6])
-            cnt -= 1
-        if cnt > 0:
-            #Stops the loop from breaking if the sum has not completed but everything else has.
-            continue
+    #Check if other data is present first, then...
+    #If cases data is present for a day and the 6 days before, then we can get weekly cases...
+    #Otherwise, continue to the next iteration...
+    #If the end of the loop is reached, return nothing ([]).
 
-    deaths_recorded = False
-    hospital_recorded = False
-    skip_upto_incl = 0
-    for row in covid_csv_data:
-        if covid_csv_data.index(row) <= skip_upto_incl:
-            #Skip this iteration
-            continue
+    current_hospital_cases_obtained = False
+    total_deaths_obtained = False
+    last7days_cases_obtained = False
+    last7days_cases = 0
+    weekly_present = False
+    skipped_first_valid_entry = False
+    for i in range(len(covid_csv_data)):
+#areaCode,areaName,areaType,date,cumDailyNsoDeathsByDeathDate,hospitalCases,newCasesBySpecimenDate
+        if not current_hospital_cases_obtained:
+            try:
+                current_hospital_cases = int(covid_csv_data[i][5])
+                current_hospital_cases_obtained = True
+            except ValueError: #Data missing (non-int-castable)
+                logging.warning("CSV: Hospital cases missing (non-int-castable).")
 
-        if row[4] and not deaths_recorded:
-            cumulative_deaths = int(row[4])
-            deaths_recorded = True
-        if row[5] and not hospital_recorded:
-            current_hospital_cases = int(row[5])
-            hospital_recorded = True
+        if not total_deaths_obtained:
+            try:
+                total_deaths = int(covid_csv_data[i][4])
+                total_deaths_obtained = True
+            except ValueError: #Data missing (non-int-castable)
+                logging.warning("CSV: Deaths missing (non-int-castable).")
 
-        if deaths_recorded and hospital_recorded:
-            break #Data extracted
+        if not last7days_cases_obtained:
+            try:
+                last7days_cases = int(covid_csv_data[i][6])
 
-    return [last_7_days_cases, current_hospital_cases, cumulative_deaths]
+                if not skipped_first_valid_entry:
+                    print("Lol")
+                    #This is the 27/10 data, which is incomplete on the cases data, so next entry.
+                    skipped_first_valid_entry = True
+                    continue
+
+                for i0 in range(i+1, i+7):
+                    try:
+                        last7days_cases += int(covid_csv_data[i0][6])
+                        last7days_cases_obtained = True
+                    except ValueError: #The value is a string; missing data
+                        last7days_cases = 0
+                        last7days_cases_obtained = False
+                        logging.warning("CSV: Weekly cases data missing (non-int-castable).")
+
+                if not last7days_cases_obtained:
+                    #Reset the value as data was not found for every day in the week preceding it.
+                    last7days_cases = 0
+            except:
+                logging.warning("CSV: Daily cases data missing (non-int-castable).")
+
+        if current_hospital_cases_obtained and total_deaths_obtained and last7days_cases_obtained:
+            return last7days_cases, current_hospital_cases, total_deaths
+    #No days were found for which all data was present
+    return 0, 0, 0
 
 def covid_API_hospital_cases_request(filters:list) -> Union[int, str]:
     """Carries out a COVID API data request for hospital cases and returns the result."""

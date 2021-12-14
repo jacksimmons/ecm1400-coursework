@@ -18,7 +18,6 @@ def test_process_covid_csv_data(): #
 def test_covid_API_request(): #
     data = covid_API_request()
     assert isinstance(data, dict)
-    print(data)
 
 def test_schedule_covid_updates(): #
     #Normal

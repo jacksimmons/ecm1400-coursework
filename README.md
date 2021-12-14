@@ -95,3 +95,43 @@ Your code has been rated at 9.25/10 (previous run: 9.25/10, +0.00)
                 
                 
                 API Data Found: {str(i - exit_index)} days early.") #How many days needed to be checked for replacement data to be found.
+
+
+                def process_covid_csv_data(covid_csv_data:list) -> list[int]:#
+    """Processes parsed COVID-19 CSV data and returns important statistics."""
+    cnt = 7
+    last_7_days_cases = 0
+    skip_upto_incl = 2
+    for row in covid_csv_data:
+        if covid_csv_data.index(row) <= skip_upto_incl:
+            #Skips the items with missing data. ! Need to make this more dynamic
+            continue
+
+        #Note: This won't give valid weekly readings if data is regularly missing.
+        if cnt > 0 and row[6]:
+            # Sum for number of cases for the last 7 valid days.
+            last_7_days_cases += int(row[6])
+            cnt -= 1
+        if cnt > 0:
+            #Stops the loop from breaking if the sum has not completed but everything else has.
+            continue
+
+    deaths_recorded = False
+    hospital_recorded = False
+    skip_upto_incl = 0
+    for row in covid_csv_data:
+        if covid_csv_data.index(row) <= skip_upto_incl:
+            #Skip this iteration
+            continue
+
+        if row[4] and not deaths_recorded:
+            cumulative_deaths = int(row[4])
+            deaths_recorded = True
+        if row[5] and not hospital_recorded:
+            current_hospital_cases = int(row[5])
+            hospital_recorded = True
+
+        if deaths_recorded and hospital_recorded:
+            break #Data extracted
+
+    return [last_7_days_cases, current_hospital_cases, cumulative_deaths]
