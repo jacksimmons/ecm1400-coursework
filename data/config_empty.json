@@ -3,6 +3,6 @@
     "blacklisted_articles": [],
     "covid_updates": [],
     "news_updates": [],
-    "current_stats": {},
-    "news_articles": [ {} ]
+    "news_articles": [],
+    "name_err": ""
 }

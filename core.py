@@ -45,15 +45,25 @@ def add_update(name:str, interval:float, update_type:str, actions:list) -> None:
 
 def add_update_with_checks(update_name:str, update_interval:float, update_type:str, actions:list):
     """Uses add_update, but applies checks before doing so, outputting any issues to the log."""
-
+    error_msg = ""
     #Check if the news update has a valid name
     if isinstance(update_name, str) and update_name != "":
         if update_name not in [upd["title"] for upd in current_data[f"{update_type}_updates"]]:
             add_update(update_name, update_interval, update_type, actions)
         else:
-            logging.warning("Update with the same name already exists.")
+            error_msg = "Update with the same name already exists."
     else:
-        logging.warning("update_name must be a non-empty string.")
+        error_msg = "Invalid update name."
+
+    if error_msg != "":
+        logging.warning(error_msg)
+        with open_utf8("data/config.json", "r") as file:
+            data = json.load(file)
+        data["name_err"] = error_msg
+        with open_utf8("data/config.json", "w") as file:
+            json.dump(data, file, indent=4)
+        return True #Error
+    return False #No error
 
 def remove_update(name:str, update_type:str) -> None:
     """Removes an update by name lookup."""
@@ -94,7 +104,9 @@ def logging_setup():
                         filename="data/log.log",
                         filemode="a")
     logging.debug("\bLOGGING STARTUP\b")
-
+    requests_log = logging.getLogger("requests")
+    requests_log.setLevel(logging.ERROR)
 
 ###Globals
 current_data = get_data_from_file()
+updates_scheduled = []

@@ -3,24 +3,107 @@
     "blacklisted_articles": [],
     "covid_updates": [
         {
-            "title": "update test",
-            "interval": 10.0,
-            "content": "Update Covid Data, Repetitive, Interval (in seconds): 10.0",
-            "repetitive": true
-        },
-        {
-            "title": "update test 2",
-            "interval": 0.0,
-            "content": "Update Covid Data, Repetitive, Interval (in seconds): 0.0",
+            "title": "lol",
+            "interval": 30.0,
+            "content": "Update covid, Repetitive, Interval (in seconds): 30.0",
             "repetitive": true
         }
     ],
-    "news_updates": [],
-    "news_articles": [],
+    "news_updates": [
+        {
+            "title": "fddsff",
+            "interval": 1.0,
+            "content": "Update news, Repetitive, Interval (in seconds): 1.0",
+            "repetitive": true
+        }
+    ],
+    "news_articles": [
+        {
+            "title": "Mounting evidence highlights the importance of Covid-19 boosters",
+            "content": "https://www.cnn.com/2021/12/08/health/pfizer-booster-data-omicron-vaccinated-definition/index.html"
+        },
+        {
+            "title": "NFL Adds Mask Requirement, Increases Covid Testing",
+            "content": "https://www.nytimes.com/2021/11/17/sports/football/nfl-covid-testing-masks-thanksgiving.html"
+        },
+        {
+            "title": "Covid-19: US surpasses 800,000 pandemic deaths",
+            "content": "https://www.bbc.co.uk/news/world-us-canada-59645307"
+        },
+        {
+            "title": "Covid-19 Boosters for All Are On the Way",
+            "content": "https://gizmodo.com/covid-19-boosters-for-all-are-on-the-way-1848085296"
+        },
+        {
+            "title": "Omicron is Here. Will We Use Our New Covid Drugs Wisely?",
+            "content": "https://www.nytimes.com/2021/12/01/opinion/omicron-covid-drugs-pfizer-antiviral.html"
+        },
+        {
+            "title": "Rotterdam police clash with rioters as Covid protest turns violent",
+            "content": "https://www.bbc.co.uk/news/world-europe-59355950"
+        },
+        {
+            "title": "NIH director: New Covid-19 variant 'ought to redouble' vaccination and mitigation efforts",
+            "content": "https://www.cnn.com/2021/11/28/politics/francis-collins-omicron-coronavirus-variant-cnntv/index.html"
+        },
+        {
+            "title": "How to prepare for another winter of Covid-19? An expert weights in",
+            "content": "https://www.cnn.com/2021/11/18/health/winter-covid-precautions-dr-wen-wellness/index.html"
+        },
+        {
+            "title": "Facebook deletes 500 accounts tied to fake Swiss expert",
+            "content": "https://www.bbc.co.uk/news/world-asia-china-59456548"
+        },
+        {
+            "title": "Russia's daily COVID-19 deaths hit new record high - Reuters",
+            "content": "https://www.reuters.com/world/europe/russias-daily-covid-19-deaths-hit-new-record-high-2021-11-18/"
+        },
+        {
+            "title": "U.S. Senate Votes to Block President Biden's Vaccine Mandate in Symbolic Win for Covid-19",
+            "content": "https://gizmodo.com/u-s-senate-votes-to-block-president-bidens-vaccine-man-1848184042"
+        },
+        {
+            "title": "Denmark reports record daily COVID-19 infection numbers - Reuters",
+            "content": "https://www.reuters.com/world/europe/denmark-reports-record-daily-covid-19-infection-numbers-2021-12-01/"
+        },
+        {
+            "title": "All vaccinated adults should get a Covid-19 booster shot because of the Omicron variant, CDC says",
+            "content": "https://www.cnn.com/2021/11/29/health/cdc-booster-guidance-omicron/index.html"
+        },
+        {
+            "title": "Ranieri urges players to get COVID-19 vaccine - Reuters",
+            "content": "https://www.reuters.com/lifestyle/sports/ranieri-urges-players-get-covid-19-vaccine-2021-12-09/"
+        },
+        {
+            "title": "Swiss group lights 11288 candles for COVID-19 victims - Reuters",
+            "content": "https://www.reuters.com/world/europe/swiss-group-lights-11288-candles-covid-19-victims-2021-12-07/"
+        },
+        {
+            "title": "Germany's COVID-19 situation is dramatic: Merkel - Reuters",
+            "content": "https://www.reuters.com/video/watch/idOVF3ZRRR5"
+        },
+        {
+            "title": "Austria orders non-vaccinated people into COVID-19 lockdown - Reuters",
+            "content": "https://www.reuters.com/business/healthcare-pharmaceuticals/austria-orders-non-vaccinated-people-into-covid-19-lockdown-2021-11-14/"
+        },
+        {
+            "title": "Russia's daily COVID-19 deaths close to record high - Reuters",
+            "content": "https://www.reuters.com/business/healthcare-pharmaceuticals/russias-daily-covid-19-deaths-close-record-high-2021-11-15/"
+        },
+        {
+            "title": "Novartis working on pan-coronavirus oral treatment, CEO says - Reuters",
+            "content": "https://www.reuters.com/business/healthcare-pharmaceuticals/novartis-working-pan-coronavirus-oral-treatment-ceo-says-2021-12-06/"
+        },
+        {
+            "title": "The Guardian: Trump tested positive for Covid-19 ahead of 2020 debate with Biden",
+            "content": "https://www.cnn.com/2021/12/01/politics/trump-covid-positive-test-biden-debate/index.html"
+        }
+    ],
+    "name_err": "",
     "location": "Exeter",
     "nation_location": "UK",
-    "local_7day_infections": 748,
-    "national_7day_infections": 306121,
-    "hospital_cases": 6395,
-    "deaths_total": 127341
+    "local_7day_infections": 717,
+    "national_7day_infections": 309527,
+    "hospital_cases": 6434,
+    "deaths_total": 127479
 }

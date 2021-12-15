@@ -10,7 +10,8 @@ from core import (
     UpdateAction,
     add_update_with_checks,
     open_utf8,
-    current_data)
+    current_data,
+    updates_scheduled)
 
 def parse_csv_data(csv_filename:str) -> list[list[str]]:#
     """Parses CSV file data into a list of lists (rows) of data items,
@@ -36,37 +37,37 @@ def process_covid_csv_data(covid_csv_data:list) -> list[int]:#
     total_deaths_obtained = False
     last7days_cases_obtained = False
     last7days_cases = 0
-    weekly_present = False
     skipped_first_valid_entry = False
-    for i in range(len(covid_csv_data)):
+
+    for index, row in enumerate(covid_csv_data):
+#Need to use hard coded logic for indices as each row is a list of the same format:
 #areaCode,areaName,areaType,date,cumDailyNsoDeathsByDeathDate,hospitalCases,newCasesBySpecimenDate
         if not current_hospital_cases_obtained:
             try:
-                current_hospital_cases = int(covid_csv_data[i][5])
+                current_hospital_cases = int(row[5])
                 current_hospital_cases_obtained = True
             except ValueError: #Data missing (non-int-castable)
                 logging.warning("CSV: Hospital cases missing (non-int-castable).")
 
         if not total_deaths_obtained:
             try:
-                total_deaths = int(covid_csv_data[i][4])
+                total_deaths = int(row[4])
                 total_deaths_obtained = True
             except ValueError: #Data missing (non-int-castable)
                 logging.warning("CSV: Deaths missing (non-int-castable).")
 
         if not last7days_cases_obtained:
             try:
-                last7days_cases = int(covid_csv_data[i][6])
+                last7days_cases = int(row[6])
 
                 if not skipped_first_valid_entry:
-                    print("Lol")
                     #This is the 27/10 data, which is incomplete on the cases data, so next entry.
                     skipped_first_valid_entry = True
                     continue
 
-                for i0 in range(i+1, i+7):
+                for x in range(index + 1, index + 7):
                     try:
-                        last7days_cases += int(covid_csv_data[i0][6])
+                        last7days_cases += int(covid_csv_data[x][6])
                         last7days_cases_obtained = True
                     except ValueError: #The value is a string; missing data
                         last7days_cases = 0
@@ -76,7 +77,7 @@ def process_covid_csv_data(covid_csv_data:list) -> list[int]:#
                 if not last7days_cases_obtained:
                     #Reset the value as data was not found for every day in the week preceding it.
                     last7days_cases = 0
-            except:
+            except ValueError:
                 logging.warning("CSV: Daily cases data missing (non-int-castable).")
 
         if current_hospital_cases_obtained and total_deaths_obtained and last7days_cases_obtained:
@@ -130,6 +131,7 @@ updates are each a day's worth of COVID data, not an update defined by the user.
     exit_index = -1
     for update in updates["data"]:
         if all(update[key] is not None for key in keys):
+            #If every key in the update has a non-None value...
             most_recent_data = update
             exit_index = updates["data"].index(update)
             break
@@ -170,7 +172,7 @@ def schedule_covid_updates(update_name:str, update_interval:float) -> None:#
     else:
         logging.error("[schedule_covid_updates] update_interval must be a float >= 0.")
 
-def covid_update_request(local="Exeter", national="UK") -> None:
+def covid_update_request(local:str="Exeter", national:str="UK") -> None:
     """Uses covid_API_request to update the main webpage for scheduled updates."""
     global current_data
 
@@ -192,3 +194,7 @@ def covid_update_request(local="Exeter", national="UK") -> None:
         json.dump(json_file, file, indent=4)
 
     current_data = json_file
+
+    if update["title"] != "Non-Repetitive":
+        #Allow it to be added again by the main scheduling loop.
+        updates_scheduled.remove(update)

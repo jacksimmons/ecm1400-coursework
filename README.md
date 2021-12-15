@@ -1,16 +1,30 @@
-#Glossary:#
+# Usage:
+- Run "main.py" to start the application.
+- Go to localhost:5000 or 127.0.0.1:5000 in your web browser.
+- Now, use the available widgets to add and remove updates.
+- You can customise the application settings in data/config.json.
+
+- When you add an update which is both a COVID data and COVID news update, two separate updates are created (one covid_update and one news_update) with
+- the same settings. When you remove one of them, the other is removed at the same time.
+- Note that this behaviour persists even if you create the COVID data and COVID news updates separately, and even if they have different settings.
+- This is intended behaviour as it allows the user to "link" a data and news update by one single name even if they have different intervals.
+
+- You can add updates with an interval of at least 0 seconds.
+- An interval of 0 seconds updates as frequently as possible.
+
+# Glossary:
 "cdata" refers to the module "covid_data_handler"
 "cnews" refers to the module "covid_news_handling"
 
-##Updates:##
+## Updates:
 Updates are changes to the website's content, whether it be COVID statistics or News Articles.
 Updates are all saved to data/config.json, and are loaded into memory at the start of the program and whenever an update is added or removed by the user.
 Updates are timed and can be repeating.
 News Updates and COVID statistics updates are stored under the aliases "news_updates" and "covid_updates" in data/config.json.
 While a News Update and Covid Update (COVID statistics update) may share the same name, two of the same type of update cannot.
 
-##Pylint Testing:##
-#Invalid Issues (marked by a - before them)
+## Pylint Testing:
+### Invalid Issues (marked by a - before them)
 [C0103] current_data is not a constant.
 [C0103] name_error_counter is not a constant.
 [C0103] api_exhausted is not a constant.
@@ -19,7 +33,7 @@ While a News Update and Covid Update (COVID statistics update) may share the sam
 [W0611] The current_data import from core in covid_data_handler is flagged as unused because the module itself doesn't call
 the only function that current_data is used in
 
-#main
+### main
 pylint main.py
 ************* Module main
 -main.py:29:0: C0103: Constant name "name_error_counter" doesn't conform to UPPER_CASE naming style (invalid-name)
@@ -35,18 +49,19 @@ main.py:107:4: W0603: Using the global statement (global-statement)
 ------------------------------------------------------------------
 Your code has been rated at 8.98/10 (previous run: 8.98/10, +0.00)
 
-#covid_data_handler
+### covid_data_handler
 ************* Module covid_data_handler
--covid_data_handler.py:67:0: C0103: Function name "covid_API_hospital_cases_request" doesn't conform to snake_case naming style (invalid-name)
--covid_data_handler.py:83:0: C0103: Function name "covid_API_request" doesn't conform to snake_case naming style (invalid-name)
--covid_data_handler.py:156:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
-covid_data_handler.py:156:4: W0603: Using the global statement (global-statement)
+-covid_data_handler.py:67:20: C0103: Variable name "x" doesn't conform to snake_case naming style (invalid-name)
+-covid_data_handler.py:87:0: C0103: Function name "covid_API_hospital_cases_request" doesn't conform to snake_case naming style (invalid-name)
+-covid_data_handler.py:102:0: C0103: Function name "covid_API_request" doesn't conform to snake_case naming style (invalid-name)
+-covid_data_handler.py:175:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
+covid_data_handler.py:175:4: W0603: Using the global statement (global-statement)
 -covid_data_handler.py:9:0: W0611: Unused current_data imported from core (unused-import)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.52/10 (previous run: 9.52/10, +0.00)
+Your code has been rated at 9.48/10 (previous run: 9.48/10, +0.00)
 
-#covid_news_handler
+### covid_news_handler
 ************* Module covid_news_handling
 -covid_news_handling.py:14:0: C0103: Constant name "api_exhausted" doesn't conform to UPPER_CASE naming style (invalid-name)
 -covid_news_handling.py:18:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
@@ -60,7 +75,7 @@ covid_news_handling.py:74:4: W0603: Using the global statement (global-statement
 ------------------------------------------------------------------
 Your code has been rated at 8.55/10 (previous run: 8.55/10, +0.00)
 
-#core
+### core
 ************* Module core
 -core.py:21:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
 core.py:21:4: W0603: Using the global statement (global-statement)
@@ -68,10 +83,13 @@ core.py:21:4: W0603: Using the global statement (global-statement)
 core.py:60:4: W0603: Using the global statement (global-statement)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.25/10 (previous run: 9.25/10, +0.00)
+Your code has been rated at 9.26/10 (previous run: 9.26/10, +0.00)
 
+## Website Testing:
+### Covid Updates
+1-minute test succeeded.
 
-##Referencing:##
+## Referencing:
 #https://stackoverflow.com/questions/24897644/is-there-a-way-to-change-pythons-open-default-text-encoding
 
         weekold_update = updates["data"][exit_index + 7]
@@ -135,3 +153,24 @@ Your code has been rated at 9.25/10 (previous run: 9.25/10, +0.00)
             break #Data extracted
 
     return [last_7_days_cases, current_hospital_cases, cumulative_deaths]
+
+
+    def add_update_check_name_valid(name:str, update_type:str) -> int:
+    """Checks to see if the name provided is a duplicate name, or an empty string."""
+    names = [update["title"] for update in current_data[f"{update_type}_updates"]]
+    if name not in names and name != "":
+        #If the name is unique and valid...
+        nice_interval = request.form["update"]
+        #Convert "MM:SS" to seconds
+        interval = float(nice_interval[:2]) * 60 + float(nice_interval[3:])
+        repeat_update = request.form.get("repeat")
+
+        actions = []
+        if repeat_update is not None:
+            actions.append(UpdateAction.REPETITIVE_REQUEST)
+        actions.append(UpdateAction.TIMED_REQUEST)
+        add_update_with_checks(name, interval, update_type, actions)
+    else:
+        current_data["name_err"] = "Name already taken."
+        name_error_counter = 0
+    return name_error_counter

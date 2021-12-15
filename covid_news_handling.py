@@ -8,22 +8,21 @@ from core import (
     UpdateAction,
     add_update_with_checks,
     open_utf8,
-    current_data)
+    current_data,
+    updates_scheduled)
 
 #Globals
 api_exhausted = False
 
-def blacklist_article(url:str) -> None:
+def blacklist_article(article:dict) -> None:
     """Removes and blacklists an article by URL lookup."""
     global current_data
 
     with open_utf8("data/config.json", "r") as file:
         data = json.load(file)
 
-    if url in data["news_articles"]:
-        article = data["news_articles"][url]
-
     data["blacklisted_articles"].append(article["content"])
+    data["news_articles"].remove(article)
 
     with open_utf8("data/config.json", "w") as file:
         json.dump(obj=data, fp=file, indent=4)
@@ -68,10 +67,11 @@ publishedAt&apiKey={current_data['api_key']}""").json()
     #Return the correctly modified data and whether the API has been exhausted for the day.
     return data
 
-def update_news_request() -> None:
+def update_news_request(update:dict) -> None:
     """Uses news_API_request to update the news and update config.json and the relevant data
 structures to reflect this."""
     global current_data
+    global updates_scheduled
 
     news_articles = news_API_request()
 
@@ -82,6 +82,10 @@ structures to reflect this."""
         json.dump(json_file, file, indent=4)
 
     current_data = json_file
+
+    if update["title"] != "Non-Repetitive":
+        #Allow it to be added again by the main scheduling loop.
+        updates_scheduled.remove(update)
 
 def update_news(update_name:str, update_interval:float=300) -> None:#
     """Base function for creating repetitive news updates via add_update().
