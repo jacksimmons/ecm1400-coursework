@@ -1,17 +1,17 @@
 """Module for handling COVID data updates."""
 import csv
-import logging
-import json
 from typing import Union
 
 from uk_covid19 import Cov19API
 
 from core import (
     UpdateAction,
+    get_data_from_file,
+    write_data_to_file,
     add_update_with_checks,
     open_utf8,
     current_data,
-    updates_scheduled)
+    LOGGER)
 
 def parse_csv_data(csv_filename:str) -> list[list[str]]:#
     """Parses CSV file data into a list of lists (rows) of data items,
@@ -27,11 +27,11 @@ each nested list representing a row in the file."""
 
 def process_covid_csv_data(covid_csv_data:list) -> list[int]:#
     """Processes parsed COVID-19 CSV data and returns important statistics."""
-
     #Check if other data is present first, then...
     #If cases data is present for a day and the 6 days before, then we can get weekly cases...
     #Otherwise, continue to the next iteration...
     #If the end of the loop is reached, return nothing ([]).
+    skip_first_entry = get_data_from_file()["csv_skip_first_entry"]
 
     current_hospital_cases_obtained = False
     total_deaths_obtained = False
@@ -47,45 +47,49 @@ def process_covid_csv_data(covid_csv_data:list) -> list[int]:#
                 current_hospital_cases = int(row[5])
                 current_hospital_cases_obtained = True
             except ValueError: #Data missing (non-int-castable)
-                logging.warning("CSV: Hospital cases missing (non-int-castable).")
+                LOGGER.warning("CSV: Hospital cases missing (non-int-castable).")
 
         if not total_deaths_obtained:
             try:
                 total_deaths = int(row[4])
                 total_deaths_obtained = True
             except ValueError: #Data missing (non-int-castable)
-                logging.warning("CSV: Deaths missing (non-int-castable).")
+                LOGGER.warning("CSV: Deaths missing (non-int-castable).")
 
         if not last7days_cases_obtained:
             try:
                 last7days_cases = int(row[6])
 
-                if not skipped_first_valid_entry:
+                if not skipped_first_valid_entry and skip_first_entry:
                     #This is the 27/10 data, which is incomplete on the cases data, so next entry.
+                    #The very first entry (the column names) is caught by the try-except statement.
                     skipped_first_valid_entry = True
                     continue
 
-                for x in range(index + 1, index + 7):
+                for day_index in range(index + 1, index + 7):
                     try:
-                        last7days_cases += int(covid_csv_data[x][6])
+                        last7days_cases += int(covid_csv_data[day_index][6])
                         last7days_cases_obtained = True
-                    except ValueError: #The value is a string; missing data
+                    except ValueError: #The value is not an integer; missing data
                         last7days_cases = 0
                         last7days_cases_obtained = False
-                        logging.warning("CSV: Weekly cases data missing (non-int-castable).")
+                        LOGGER.warning("CSV: Weekly cases data missing (non-int-castable).")
 
                 if not last7days_cases_obtained:
                     #Reset the value as data was not found for every day in the week preceding it.
                     last7days_cases = 0
             except ValueError:
-                logging.warning("CSV: Daily cases data missing (non-int-castable).")
+                LOGGER.warning("CSV: Daily cases data missing (non-int-castable).")
 
         if current_hospital_cases_obtained and total_deaths_obtained and last7days_cases_obtained:
+            LOGGER.info("CSV processing succeeded.")
             return last7days_cases, current_hospital_cases, total_deaths
+
+    LOGGER.error("CSV processing failed.")
     #No days were found for which all data was present
     return 0, 0, 0
 
-def covid_API_hospital_cases_request(filters:list) -> Union[int, str]:
+def covid_API_hospital_cases_request(filters:list) -> Union[int, str]:#
     """Carries out a COVID API data request for hospital cases and returns the result."""
     hospital_api = Cov19API(filters=filters, structure={"hospitalCases":"hospitalCases"}).get_json()
 
@@ -93,10 +97,10 @@ def covid_API_hospital_cases_request(filters:list) -> Union[int, str]:
         if update["hospitalCases"] is not None:
             hospital_cases = update["hospitalCases"]
             break
-        logging.debug("API Data Missing: hospitalCases.")
+        LOGGER.debug("API Data Missing: hospitalCases.")
     else: #No hospital stats available.
         hospital_cases = "N/A"
-        logging.warning("Important data is missing from the API: Hospital cases.")
+        LOGGER.warning("Important data is missing from the API: Hospital cases.")
 
     return hospital_cases
 
@@ -104,20 +108,17 @@ def covid_API_request(location:str="Exeter",
                       location_type:str="ltla") -> dict:#
     """Carries out a COVID API data request and returns the result. Note that in this context,
 updates are each a day's worth of COVID data, not an update defined by the user."""
-
     filters = [
         f"areaType={location_type}",
         f"areaName={location}"]
-    if location_type == "nation":
-        filters.pop(1)
 
     structure = {
         "date": "date",
-        "cumDeaths28DaysByDeathDate": "cumDeaths28DaysByDeathDate",
+        "cumDailyNsoDeathsByDeathDate": "cumDailyNsoDeathsByDeathDate",
         "newCasesByPublishDate": "newCasesByPublishDate"
     }
     if location_type != "nation":
-        structure.pop("cumDeaths28DaysByDeathDate")
+        structure.pop("cumDailyNsoDeathsByDeathDate")
 
     api = Cov19API(
         filters=filters,
@@ -137,8 +138,10 @@ updates are each a day's worth of COVID data, not an update defined by the user.
             break
 
     if most_recent_data == {}:
-        logging.error("API Data Missing: ALL")
-        return {} #No full set of data was obtained, so just exit here.
+        LOGGER.critical("API Data Missing: ALL")
+        #The entire update has failed; critical error. Occurs if no days have a full set of valid
+        #data, which is incredibly unlikely.
+        return {} #No full set of data was obtained, so exit here.
 
     ##Data: See structure
     most_recent_data["newCases7DaysByPublishDate"] = 0
@@ -148,11 +151,11 @@ updates are each a day's worth of COVID data, not an update defined by the user.
             if item["newCasesByPublishDate"] is not None:
                 most_recent_data["newCases7DaysByPublishDate"] += item["newCasesByPublishDate"]
             else:
-                logging.warning("API Data Missing: New weekly cases (for one of the days).")
+                LOGGER.warning("API Data Missing: New weekly cases (for one of the days).")
 
     else:
         most_recent_data["newCases7DaysByPublishDate"] = "N/A"
-        logging.error("API Data Missing: Cumulative infections from a week ago or older.")
+        LOGGER.error("API Data Missing: Cumulative infections from a week ago or older.")
 
     if location_type == "nation":
         most_recent_data["hospitalCases"] = covid_API_hospital_cases_request(filters)
@@ -164,37 +167,32 @@ def schedule_covid_updates(update_name:str, update_interval:float) -> None:#
     try:
         update_interval = float(update_interval)
         cont = update_interval >= 0
-    except ValueError:
+    except ValueError: #interval not valid
         cont = False
     if cont:
         actions = [UpdateAction.REPETITIVE_REQUEST, UpdateAction.TIMED_REQUEST]
         add_update_with_checks(update_name, update_interval, "covid", actions)
     else:
-        logging.error("[schedule_covid_updates] update_interval must be a float >= 0.")
+        LOGGER.error("[schedule_covid_updates] update_interval must be a float >= 0.")
 
-def covid_update_request(local:str="Exeter", national:str="UK") -> None:
+def covid_update_request(update:dict, local:str="Exeter", nation:str="England") -> None:#
     """Uses covid_API_request to update the main webpage for scheduled updates."""
     global current_data
 
-    local = covid_API_request(location=local, location_type="ltla")
-    national = covid_API_request(location=national, location_type="nation")
+    print("Covid Update Request from " + update["title"])
+    LOGGER.info("Covid Update Request from %s", update["title"])
 
-    with open_utf8("data/config.json", "r") as file:
-        json_file = json.load(file)
+    local_data = covid_API_request(location=local, location_type="ltla")
+    national_data = covid_API_request(location=nation, location_type="nation")
 
+    json_file = get_data_from_file()
     json_file.update({
-                    "location": "Exeter",
-                    "nation_location": "UK",
-                    "local_7day_infections": local["newCases7DaysByPublishDate"],
-                    "national_7day_infections": national["newCases7DaysByPublishDate"],
-                    "hospital_cases": national["hospitalCases"],
-                    "deaths_total": national["cumDeaths28DaysByDeathDate"]})
-
-    with open_utf8("data/config.json", "w") as file:
-        json.dump(json_file, file, indent=4)
+                    "location": local,
+                    "nation_location": nation,
+                    "local_7day_infections": local_data["newCases7DaysByPublishDate"],
+                    "national_7day_infections": national_data["newCases7DaysByPublishDate"],
+                    "hospital_cases": national_data["hospitalCases"],
+                    "deaths_total": national_data["cumDailyNsoDeathsByDeathDate"]})
+    write_data_to_file(json_file)
 
     current_data = json_file
-
-    if update["title"] != "Non-Repetitive":
-        #Allow it to be added again by the main scheduling loop.
-        updates_scheduled.remove(update)

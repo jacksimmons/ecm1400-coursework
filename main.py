@@ -1,6 +1,5 @@
 """The main file of the project. Handles the scheduling loop and the Flask application."""
 
-import json
 import threading
 import sched
 import time
@@ -20,62 +19,88 @@ from covid_news_handling import (
     update_news_request)
 from core import (
     get_data_from_file,
+    write_data_to_file,
     current_data,
     add_update_with_checks,
     remove_update,
-    UpdateAction,
-    open_utf8,
-    logging_setup,
-    updates_scheduled)
+    UpdateAction)
 
 #Globals
 update_name_taken_error = False
 
 ###SCHEDULING
-def launch_scheduler_thread(scheduler:sched.scheduler, update:dict, action:Callable, priority:int):
-    """A procedure which starts a new thread with a single scheduled event in it."""
-
-    def start_scheduler(scheduler:sched.scheduler, update:dict, action:Callable, priority:int):
-        """Starts the scheduler. Required as the Thread needs to call something."""
-        scheduler.enter(update["interval"], priority, action, (update))
-        scheduler.run()
-
-    threading.Thread(None, start_scheduler(scheduler, update["title"], update["interval"], action))
-
 def do_updates() -> None:
-    """Adds all of the updates in the global updates list to a scheduler, then runs that scheduler
-    every time the scheduler'scheduler queue is empty. A never-ending procedure, so must be run in
-    a separate thread to prevent the program from halting."""
-    global current_data
-    current_data = get_data_from_file()
+    """Uses multithreading to start multiple scheduling events (the updates) at once."""
+    def schedule_update(interval:float, action:Callable, update:dict, priority:int=1) -> None:
+        """Uses sched to schedule an update."""
+        scheduler = sched.scheduler(time.time, time.sleep)
+        while update in current_data["updates_scheduled"] and update["repetitive"]:
+            if not scheduler.queue: # == []
+                scheduler.enter(interval,
+                        priority,
+                        action,
+                        kwargs={"update": update})
+            scheduler.run()
 
-    scheduler = sched.scheduler(time.time, time.sleep)
+        if not update["repetitive"]:
+            #Execute once instead
+            scheduler.enter(interval,
+                        priority,
+                        action,
+                        kwargs={"update": update})
+            scheduler.run()
+
+        if not update["repetitive"]:
+            #The update is not repetitive so remove it.
+            remove_update(update["title"], "covid")
+
+    current_data["updates_scheduled"] = []
+    current_data["covid_updates_scheduled"] = []
+    current_data["news_updates_scheduled"] = []
+    write_data_to_file(current_data)
+
+    startup = False
 
     while True:
-        if current_data["updates"] != []:
+        if len(current_data["updates"]) > len(current_data["updates_scheduled"]) or startup:
+            #Update whenever there are updates waiting for scheduling.
+            startup = False
             for update in current_data["covid_updates"]:
-                if update not in updates_scheduled:
-                    if not update["repetitive"]:
-                        #If two identical updates exist, it doesn't matter which is removed.
-                        remove_update(update["title"], "covid")
-                        #This is passed to covid_data_request.
-                        update["title"] = "Non-Repetitive"
-                    launch_scheduler_thread(scheduler, update, covid_data_request, 1)
-                    updates_scheduled.append(update)
+                if update not in current_data["covid_updates_scheduled"]:
+                    #Only schedule the covid updates which need scheduling.
+
+                    current_data["covid_updates_scheduled"].append(update)
+                    current_data["updates_scheduled"].append(update)
+                    write_data_to_file(current_data)
+                    update_thread = threading.Thread(None,
+                                                        schedule_update,
+                                                        args = (
+                                                        update["interval"],
+                                                        covid_update_request,
+                                                        update,
+                                                        1),
+                                                        name=update["title"])
+                    update_thread.start()
+
             for update in current_data["news_updates"]:
-                if update not in updates_scheduled:
-                    if not update["repetitive"]:
-                        #If two identical updates exist, it doesn't matter which is removed.
-                        remove_update(update["title"], "news")
-                        #This is passed to update_news_request.
-                        update["title"] = "Non-Repetitive"
-                    launch_scheduler_thread(scheduler, update, update_news_request, 1)
-                    updates_scheduled.append(update)
-            scheduler.run()
+                if update not in current_data["news_updates_scheduled"]:
+                    #Only schedule the news updates which need scheduling.
+
+                    current_data["news_updates_scheduled"].append(update)
+                    current_data["updates_scheduled"].append(update)
+                    write_data_to_file(current_data)
+                    update_thread = threading.Thread(None,
+                                                        schedule_update,
+                                                        args = (
+                                                        update["interval"],
+                                                        update_news_request,
+                                                        update,
+                                                        1),
+                                                        name=update["title"])
+                    update_thread.start()
 
 ###Startup
 #Starts the infinite loop in a new thread
-logging_setup()
 update_runner = threading.Thread(None, do_updates)
 update_runner.start()
 
@@ -92,9 +117,9 @@ def render_webpage():
     update_to_remove = request.args.get("update_item")
     article_to_remove = request.args.get("notif")
 
+    #If user chose to remove an update
     if update_to_remove is not None:
-        with open_utf8("data/config.json", "r") as file:
-            json_file = json.load(file)
+        json_file = get_data_from_file()
         covid_titles = [update["title"] for update in json_file["covid_updates"]]
         news_titles = [update["title"] for update in json_file["news_updates"]]
         if update_to_remove in covid_titles:
@@ -103,6 +128,7 @@ def render_webpage():
             remove_update(update_to_remove, "news")
         return redirect(request.path)
 
+    #If user chose to remove an article
     if article_to_remove is not None:
         for article in current_data["news_articles"]:
             if article["title"] == article_to_remove:
@@ -114,19 +140,18 @@ def render_webpage():
         #Make the error disappear upon next "submit".
         update_name_taken_error = False
     else:
-        with open_utf8("data/config.json", "r") as file:
-            data = json.load(file)
+        data = get_data_from_file()
         data["name_err"] = "" #Remove the name error
-        with open_utf8("data/config.json", "w") as file:
-            json.dump(data, file, indent=4)
+        write_data_to_file(data)
 
     current_data = get_data_from_file()
-
     return render_template(template_name_or_list="index.html", **current_data)
 
 @app.route("/submit", methods=["POST"])
 def submit_form():
     """Runs when the user clicks "Submit" on the website to add their update."""
+    #NOTE: an added update will not be scheduled until all other updates have finished.
+    #(See Usage:4 in README.md)
     global update_name_taken_error
 
     if request.method == "POST":

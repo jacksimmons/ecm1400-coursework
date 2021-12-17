@@ -2,7 +2,13 @@
     "api_key": "22da870c85c44773ab4b58846582d597",
     "blacklisted_articles": [],
     "covid_updates": [],
+    "covid_updates_scheduled": [],
     "news_updates": [],
+    "news_updates_scheduled": [],
+    "updates": [],
+    "updates_scheduled": [],
     "news_articles": [],
-    "name_err": ""
+    "name_err": "",
+    "csv_skip_first_entry": true,
+    "log_level": 30
 }
