@@ -49,10 +49,9 @@ def do_updates() -> None:
                         action,
                         kwargs={"update": update})
             scheduler.run()
-
-        if not update["repetitive"]:
             #The update is not repetitive so remove it.
             remove_update(update["title"], "covid")
+            remove_update(update["title"], "news")
 
     current_data["updates_scheduled"] = []
     current_data["covid_updates_scheduled"] = []

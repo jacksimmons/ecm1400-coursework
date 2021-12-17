@@ -1,0 +1,125 @@
+2021-12-17 06:46:49,745  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-12-17 06:46:57,093 127.0.0.1 - - [17/Dec/2021 06:46:57] "GET / HTTP/1.1" 200 -
+2021-12-17 06:46:57,690 127.0.0.1 - - [17/Dec/2021 06:46:57] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:46:57,705 127.0.0.1 - - [17/Dec/2021 06:46:57] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:46:57,720 127.0.0.1 - - [17/Dec/2021 06:46:57] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:46:57,737 127.0.0.1 - - [17/Dec/2021 06:46:57] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:46:57,936 127.0.0.1 - - [17/Dec/2021 06:46:57] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:46:58,168 127.0.0.1 - - [17/Dec/2021 06:46:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2021-12-17 06:47:04,772 127.0.0.1 - - [17/Dec/2021 06:47:04] "[32mPOST /submit HTTP/1.1[0m" 302 -
+2021-12-17 06:47:05,080 127.0.0.1 - - [17/Dec/2021 06:47:05] "GET / HTTP/1.1" 200 -
+2021-12-17 06:47:05,356 127.0.0.1 - - [17/Dec/2021 06:47:05] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:47:05,388 127.0.0.1 - - [17/Dec/2021 06:47:05] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:05,542 127.0.0.1 - - [17/Dec/2021 06:47:05] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:05,635 127.0.0.1 - - [17/Dec/2021 06:47:05] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:05,681 127.0.0.1 - - [17/Dec/2021 06:47:05] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:47:10,930  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-12-17 06:47:13,319 127.0.0.1 - - [17/Dec/2021 06:47:13] "GET / HTTP/1.1" 200 -
+2021-12-17 06:47:13,779 127.0.0.1 - - [17/Dec/2021 06:47:13] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:47:13,794 127.0.0.1 - - [17/Dec/2021 06:47:13] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:13,810 127.0.0.1 - - [17/Dec/2021 06:47:13] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:47:13,840 127.0.0.1 - - [17/Dec/2021 06:47:13] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:13,902 127.0.0.1 - - [17/Dec/2021 06:47:13] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:14,196 127.0.0.1 - - [17/Dec/2021 06:47:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2021-12-17 06:47:22,847 Read: config.json is in use [empty]. Aborting...
+2021-12-17 06:47:22,988 127.0.0.1 - - [17/Dec/2021 06:47:22] "GET / HTTP/1.1" 200 -
+2021-12-17 06:47:23,047 Cannot remove this covid update,
+as there are no updates of that type.
+2021-12-17 06:47:23,140 127.0.0.1 - - [17/Dec/2021 06:47:23] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:47:23,294 127.0.0.1 - - [17/Dec/2021 06:47:23] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:23,401 127.0.0.1 - - [17/Dec/2021 06:47:23] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:23,478 127.0.0.1 - - [17/Dec/2021 06:47:23] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:23,618 127.0.0.1 - - [17/Dec/2021 06:47:23] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:47:26,652 127.0.0.1 - - [17/Dec/2021 06:47:26] "GET / HTTP/1.1" 200 -
+2021-12-17 06:47:26,835 127.0.0.1 - - [17/Dec/2021 06:47:26] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:47:26,974 127.0.0.1 - - [17/Dec/2021 06:47:26] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:27,096 127.0.0.1 - - [17/Dec/2021 06:47:27] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:27,144 127.0.0.1 - - [17/Dec/2021 06:47:27] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:47:27,220 127.0.0.1 - - [17/Dec/2021 06:47:27] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:28,746 127.0.0.1 - - [17/Dec/2021 06:47:28] "GET / HTTP/1.1" 200 -
+2021-12-17 06:47:28,867 127.0.0.1 - - [17/Dec/2021 06:47:28] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:47:29,022 127.0.0.1 - - [17/Dec/2021 06:47:29] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:29,037 127.0.0.1 - - [17/Dec/2021 06:47:29] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:29,269 127.0.0.1 - - [17/Dec/2021 06:47:29] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:47:29,313 127.0.0.1 - - [17/Dec/2021 06:47:29] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:30,839 127.0.0.1 - - [17/Dec/2021 06:47:30] "GET / HTTP/1.1" 200 -
+2021-12-17 06:47:31,099 127.0.0.1 - - [17/Dec/2021 06:47:31] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:47:31,130 127.0.0.1 - - [17/Dec/2021 06:47:31] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:31,331 127.0.0.1 - - [17/Dec/2021 06:47:31] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:31,408 127.0.0.1 - - [17/Dec/2021 06:47:31] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:47:31,563 127.0.0.1 - - [17/Dec/2021 06:47:31] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:48:31,905 127.0.0.1 - - [17/Dec/2021 06:48:31] "GET / HTTP/1.1" 200 -
+2021-12-17 06:48:31,996 127.0.0.1 - - [17/Dec/2021 06:48:31] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:48:32,150 127.0.0.1 - - [17/Dec/2021 06:48:32] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:48:32,259 127.0.0.1 - - [17/Dec/2021 06:48:32] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:48:32,366 127.0.0.1 - - [17/Dec/2021 06:48:32] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:48:32,381 127.0.0.1 - - [17/Dec/2021 06:48:32] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:31,841  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-12-17 06:49:33,769 127.0.0.1 - - [17/Dec/2021 06:49:33] "GET / HTTP/1.1" 200 -
+2021-12-17 06:49:34,443 127.0.0.1 - - [17/Dec/2021 06:49:34] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:34,444 127.0.0.1 - - [17/Dec/2021 06:49:34] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:49:34,505 127.0.0.1 - - [17/Dec/2021 06:49:34] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:49:34,536 127.0.0.1 - - [17/Dec/2021 06:49:34] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:34,583 127.0.0.1 - - [17/Dec/2021 06:49:34] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:34,922 127.0.0.1 - - [17/Dec/2021 06:49:34] "GET / HTTP/1.1" 200 -
+2021-12-17 06:49:35,121 127.0.0.1 - - [17/Dec/2021 06:49:35] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:49:35,289 127.0.0.1 - - [17/Dec/2021 06:49:35] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:35,336 127.0.0.1 - - [17/Dec/2021 06:49:35] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:35,399 127.0.0.1 - - [17/Dec/2021 06:49:35] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:49:35,414 127.0.0.1 - - [17/Dec/2021 06:49:35] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:36,368 127.0.0.1 - - [17/Dec/2021 06:49:36] "[32mGET /?update_item=lol HTTP/1.1[0m" 302 -
+2021-12-17 06:49:36,770 127.0.0.1 - - [17/Dec/2021 06:49:36] "GET / HTTP/1.1" 200 -
+2021-12-17 06:49:37,045 127.0.0.1 - - [17/Dec/2021 06:49:37] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:49:37,107 127.0.0.1 - - [17/Dec/2021 06:49:37] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:37,231 127.0.0.1 - - [17/Dec/2021 06:49:37] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:37,338 127.0.0.1 - - [17/Dec/2021 06:49:37] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:49:37,414 127.0.0.1 - - [17/Dec/2021 06:49:37] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:42,680 Cannot remove this covid update,
+as there are no updates of that type.
+2021-12-17 06:49:45,283 127.0.0.1 - - [17/Dec/2021 06:49:45] "[32mPOST /submit HTTP/1.1[0m" 302 -
+2021-12-17 06:49:45,654 127.0.0.1 - - [17/Dec/2021 06:49:45] "GET / HTTP/1.1" 200 -
+2021-12-17 06:49:45,822 127.0.0.1 - - [17/Dec/2021 06:49:45] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:49:46,083 127.0.0.1 - - [17/Dec/2021 06:49:46] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:46,160 127.0.0.1 - - [17/Dec/2021 06:49:46] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:46,283 127.0.0.1 - - [17/Dec/2021 06:49:46] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:46,300 127.0.0.1 - - [17/Dec/2021 06:49:46] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:49:50,457  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-12-17 06:49:54,125 127.0.0.1 - - [17/Dec/2021 06:49:54] "GET / HTTP/1.1" 200 -
+2021-12-17 06:49:54,694 127.0.0.1 - - [17/Dec/2021 06:49:54] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:49:54,737 127.0.0.1 - - [17/Dec/2021 06:49:54] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:54,799 127.0.0.1 - - [17/Dec/2021 06:49:54] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:49:54,799 127.0.0.1 - - [17/Dec/2021 06:49:54] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:54,813 127.0.0.1 - - [17/Dec/2021 06:49:54] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:57,479 127.0.0.1 - - [17/Dec/2021 06:49:57] "GET / HTTP/1.1" 200 -
+2021-12-17 06:49:57,586 127.0.0.1 - - [17/Dec/2021 06:49:57] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:49:57,848 127.0.0.1 - - [17/Dec/2021 06:49:57] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:57,954 127.0.0.1 - - [17/Dec/2021 06:49:57] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:58,017 127.0.0.1 - - [17/Dec/2021 06:49:58] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:49:58,095 127.0.0.1 - - [17/Dec/2021 06:49:58] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:49:58,124 Cannot remove this covid update,
+as there are no updates of that type.
+2021-12-17 06:50:04,992 127.0.0.1 - - [17/Dec/2021 06:50:04] "[32mGET /?update_item=sgdfgfd HTTP/1.1[0m" 302 -
+2021-12-17 06:50:05,409 127.0.0.1 - - [17/Dec/2021 06:50:05] "GET / HTTP/1.1" 200 -
+2021-12-17 06:50:05,746 127.0.0.1 - - [17/Dec/2021 06:50:05] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:50:05,838 127.0.0.1 - - [17/Dec/2021 06:50:05] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:50:05,945 127.0.0.1 - - [17/Dec/2021 06:50:05] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:50:06,039 127.0.0.1 - - [17/Dec/2021 06:50:06] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:50:06,069 127.0.0.1 - - [17/Dec/2021 06:50:06] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:51:06,705 127.0.0.1 - - [17/Dec/2021 06:51:06] "GET / HTTP/1.1" 200 -
+2021-12-17 06:51:06,933 127.0.0.1 - - [17/Dec/2021 06:51:06] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:51:06,995 127.0.0.1 - - [17/Dec/2021 06:51:06] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:51:07,226 127.0.0.1 - - [17/Dec/2021 06:51:07] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:51:07,257 127.0.0.1 - - [17/Dec/2021 06:51:07] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:51:07,272 127.0.0.1 - - [17/Dec/2021 06:51:07] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:52:07,862 127.0.0.1 - - [17/Dec/2021 06:52:07] "GET / HTTP/1.1" 200 -
+2021-12-17 06:52:08,088 127.0.0.1 - - [17/Dec/2021 06:52:08] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:52:08,195 127.0.0.1 - - [17/Dec/2021 06:52:08] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:52:08,349 127.0.0.1 - - [17/Dec/2021 06:52:08] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:52:08,474 127.0.0.1 - - [17/Dec/2021 06:52:08] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:52:08,476 127.0.0.1 - - [17/Dec/2021 06:52:08] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
+2021-12-17 06:53:08,938 127.0.0.1 - - [17/Dec/2021 06:53:08] "GET / HTTP/1.1" 200 -
+2021-12-17 06:53:09,105 127.0.0.1 - - [17/Dec/2021 06:53:09] "[36mGET /static/bootstrap.min.css HTTP/1.1[0m" 304 -
+2021-12-17 06:53:09,213 127.0.0.1 - - [17/Dec/2021 06:53:09] "[36mGET /static/jquery-3.3.1.slim.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:53:09,367 127.0.0.1 - - [17/Dec/2021 06:53:09] "[36mGET /static/popper.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:53:09,382 127.0.0.1 - - [17/Dec/2021 06:53:09] "[36mGET /static/bootstrap.min.js.download HTTP/1.1[0m" 304 -
+2021-12-17 06:53:09,431 127.0.0.1 - - [17/Dec/2021 06:53:09] "[33mGET /index_files/ HTTP/1.1[0m" 404 -
