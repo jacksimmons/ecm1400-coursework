@@ -119,19 +119,21 @@ Your code has been rated at 8.40/10 (previous run: 8.00/10, +0.40)
 ## core
 ************* Module core
 -core.py:16:0: C0103: Constant name "adding_update" doesn't conform to UPPER_CASE naming style (invalid-name)
--core.py:59:4: C0103: Constant name "adding_update" doesn't conform to UPPER_CASE naming style (invalid-name)
-core.py:59:4: W0603: Using the global statement (global-statement)
--core.py:60:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
-core.py:60:4: W0603: Using the global statement (global-statement)
--core.py:87:4: C0103: Constant name "adding_update" doesn't conform to UPPER_CASE naming style (invalid-name)
-core.py:87:4: W0603: Using the global statement (global-statement)
--core.py:114:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
-core.py:114:4: W0603: Using the global statement (global-statement)
--core.py:150:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
-core.py:150:4: W0603: Using the global statement (global-statement)
+-core.py:62:4: C0103: Constant name "adding_update" doesn't conform to UPPER_CASE naming style (invalid-name)
+core.py:62:4: W0603: Using the global statement (global-statement)
+-core.py:63:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
+core.py:63:4: W0603: Using the global statement (global-statement)
+-core.py:90:4: C0103: Constant name "adding_update" doesn't conform to UPPER_CASE naming style (invalid-name)
+core.py:90:4: W0603: Using the global statement (global-statement)
+-core.py:91:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
+core.py:91:4: W0603: Using the global statement (global-statement)
+-core.py:125:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
+core.py:125:4: W0603: Using the global statement (global-statement)
+-core.py:161:4: C0103: Constant name "current_data" doesn't conform to UPPER_CASE naming style (invalid-name)
+core.py:161:4: W0603: Using the global statement (global-statement)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.90/10 (previous run: 8.81/10, +0.09)
+Your code has been rated at 8.82/10 (previous run: 8.90/10, -0.08)
 
 # pytest:
 platform win32 -- Python 3.10.0, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
