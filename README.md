@@ -1,5 +1,5 @@
 # Github:
-https://github.com/piklman/covid-dash
+https://github.com/piklman/ecm1400_coursework
 
 # Usage:
 - Python version: 3.10 (64-bit)
