@@ -1,3 +1,7 @@
+# Note:
+This project relies on the UK Covid 19 API, and will cease to work if this API shuts down.
+As the NHS Covid App is shutting down, it is likely this API will shut down in the near future as well.
+
 # Github:
 https://github.com/piklman/ecm1400_coursework
 
